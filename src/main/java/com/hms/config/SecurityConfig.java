@@ -25,8 +25,9 @@ public class SecurityConfig {
         //haap
 //        http.authorizeHttpRequests().anyRequest().permitAll();
         http.authorizeHttpRequests().
-                requestMatchers("/api/v1/users/login", "/api/v1/users/signUp").
+                requestMatchers("/api/v1/users/login", "/api/v1/users/signUp","/api/v1/users/signup-propertyowner").
                 permitAll().
+                requestMatchers("/api/v1/users/get").hasRole("OWNER").
                 anyRequest().
                 authenticated();
          return http.build();

@@ -39,6 +39,26 @@ public class UserController {
         }
         String hashpw = BCrypt.hashpw(appUser.getPassword(), BCrypt.gensalt(5));
         appUser.setPassword(hashpw);
+        appUser.setRole("ROLE_USER");
+        AppUser save = appUserRepository.save(appUser);
+
+        return new ResponseEntity<>(appUser, HttpStatus.OK);
+    }
+    @PostMapping("/signup-propertyowner")
+    public ResponseEntity<?> createPropertyOwnerUser(
+            @RequestBody AppUser appUser
+    ) {
+        Optional<AppUser> opUsername = appUserRepository.findByUsername(appUser.getUsername());
+        if (opUsername.isPresent()) {
+            return new ResponseEntity<>("username already exits", HttpStatus.BAD_REQUEST);
+        }
+        Optional<AppUser> byEmail = appUserRepository.findByEmail(appUser.getEmail());
+        if (byEmail.isPresent()) {
+            return new ResponseEntity<>("Email already exits", HttpStatus.BAD_REQUEST);
+        }
+        String hashpw = BCrypt.hashpw(appUser.getPassword(), BCrypt.gensalt(5));
+        appUser.setPassword(hashpw);
+        appUser.setRole("ROLE_OWNER");
         AppUser save = appUserRepository.save(appUser);
 
         return new ResponseEntity<>(appUser, HttpStatus.OK);
